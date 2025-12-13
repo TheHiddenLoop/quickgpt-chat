@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #4A9FD8;
+  --primary-bg: #1A2F3F;
+  
+  --secondary-color: #6BB8E8;
+  --secondary-bg: #1F3645;
+  
+  --accent-color: #5AA8D0;
+  --accent-bg: #1C3341;
+  
+  --text-primary: #E8F4FA;
+  --text-secondary: #A8C5D8;
+  
+  --bg-primary: #0F1C26;
+  --bg-secondary: #152531;
+  
+  --border-color: #2A4052;
+  --border-dark: #3A5266;
+  
+  --success-color: #4FD1A8;
+  --success-bg: #1A3B32;
+  
+  --error-color: #FF6B6B;
+  --error-bg: #3B1F1F;
+  
+  --warning-color: #FFB84D;
+  --warning-bg: #3B2F1A;
+  
+  --info-color: #5FB3E8;
+  --info-bg: #1A2E3F;
+}
