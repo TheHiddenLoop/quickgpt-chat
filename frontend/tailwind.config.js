@@ -41,7 +41,7 @@ export default {
         skin: "all", 
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
+        robot: ['Roboto', 'sans-serif'],
       },
     },
   },
