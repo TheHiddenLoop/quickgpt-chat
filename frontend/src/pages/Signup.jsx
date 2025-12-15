@@ -4,6 +4,9 @@ import { Lock, Mail, User, UserPlus } from "lucide-react"
 import InputField from "../components/Ui/Input"
 import { useState } from "react"
 import Button from "../components/Ui/Button"
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../fetures/authentication/authSlice"
+import { selectAuthStatus } from "../fetures/authentication/authSelector"
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -11,6 +14,8 @@ function Signup() {
     email: "",
     password: ""
   });
+  const dispatch = useDispatch();
+  const loading = useSelector(selectAuthStatus);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,19 +25,18 @@ function Signup() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password || !formData.name) return;
 
-    console.log(formData);
-    setFormData({
-      name: "",
-      email: "",
-      password: ""
-    })
-
-  }
+    try {
+      await dispatch(signup(formData)).unwrap(); 
+      setFormData({ name: "", email: "", password: "" });
+    } catch (err) {
+      console.error("Signup failed:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-bgPrimary">
@@ -100,7 +104,7 @@ function Signup() {
               </div>
             </div>
 
-            <Button text="Sign up" className="w-full bg-primary text-textPrimary hover:bg-secondary" />
+            <Button disabled={loading === "loading"} text="Sign up" className="w-full bg-primary text-textPrimary hover:bg-secondary" />
           </form>
         </div>
 

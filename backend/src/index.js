@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { authRouter } from "./routes/auth.js";
 import { connectDB } from "./config/connectDb.js";
 import cookieParser from "cookie-parser";
+import cors from "cors"
 
 dotenv.config();
 
@@ -12,7 +13,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/v1/auth", authRouter);
+app.use(cors({
+    origin:process.env.FRONTEND_URL,
+    credentials:true
+}));
+
+app.use("/api/auth", authRouter);
 
 app.get("/", (req, res) => {
     return res.status(200).json({ success: true, message: "Server is running..." });

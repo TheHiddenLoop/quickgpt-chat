@@ -4,12 +4,19 @@ import { Lock, Mail } from "lucide-react"
 import InputField from "../components/Ui/Input"
 import { useState } from "react"
 import Button from "../components/Ui/Button"
+import { login } from "../fetures/authentication/authSlice"
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthStatus } from "../fetures/authentication/authSelector"
+
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+
+  const dispatch = useDispatch();
+const loading = useSelector(selectAuthStatus);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,20 +26,18 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!formData.email || !formData.password) {
-      return
-    }
-
-    console.log(formData);
-    setFormData({
-      email: "",
-      password: ""
-    })
-
-  }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      if (!formData.email || !formData.password) return;
+  
+      try {
+        await dispatch(login(formData)).unwrap(); 
+        setFormData({email: "", password: "" });
+      } catch (err) {
+        console.error("Signup failed:", err);
+      }
+    };
 
   return (
     <div className="min-h-screen bg-bgPrimary">
