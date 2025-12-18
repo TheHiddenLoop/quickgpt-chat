@@ -3,7 +3,7 @@ import { connectDb } from "./db.js";
 import { User } from "../model/User.js";
 import { upsertStreamUser, deleteStreamUser } from "./stream.js";
 
-export const inngest = new Inngest({ id: "video-session" });
+export const inngest = new Inngest({ id: "talent-iq" });
 
 
 const syncUser = inngest.createFunction(
