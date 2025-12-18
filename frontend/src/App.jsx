@@ -11,6 +11,8 @@ import {
 } from "./fetures/authentication/authSelector";
 import { checkAuth } from "./fetures/authentication/authSlice";
 import { Loader } from "lucide-react";
+import Layout from "./pages/Layout";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const user = useSelector(selectAuthUser);
@@ -35,7 +37,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bgPrimary font-robot">
+    <div className="min-h-screen bg-bgSecondary font-robot">
       <Toaster />
 
       <Routes>
@@ -43,6 +45,10 @@ function App() {
           path="/"
           element={user ? <Home /> : <Navigate to="/login" replace />}
         />
+
+        <Route path="/vid" element={<Layout />}>
+          <Route index element={<Dashboard />}/>
+        </Route>
 
         <Route
           path="/login"
