@@ -5,9 +5,7 @@ import { connectDB } from "./config/connectDb.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 import {createClient} from "redis";
-import { sessionRouter } from "./routes/createSession.js";
-import {serve} from "inngest/express"
-import { functions, inngest } from "./libs/inngest.js";
+
 
 dotenv.config();
 
@@ -26,9 +24,7 @@ app.use(cors({
     credentials:true
 }));
 
-app.use("/api/inngest", serve({client:inngest}, functions));
 app.use("/api/auth", authRouter);
-app.use("/api/session", sessionRouter);
 
 app.get("/", (req, res) => {
     return res.status(200).json({ success: true, message: "Server is running..." });
