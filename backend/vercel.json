@@ -9,7 +9,9 @@
           "src/config/**",
           "src/controllers/**",
           "src/middlewares/**",
-          "src/routes/**"
+          "src/routes/**",
+          "src/libs/**",
+          "src/model/**"
         ]
       }
     }
