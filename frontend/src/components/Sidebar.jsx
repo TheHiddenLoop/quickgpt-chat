@@ -1,29 +1,33 @@
 import React from "react";
 import {
-  Hash,
-  House,
-  SquarePen,
   Image,
-  Eraser,
-  Scissors,
-  FileText,
-  Users,
   LogOut,
+  Youtube,
+  Instagram,
+  Facebook,
+  Twitter,
+  Music,
+  LayoutDashboard,
 } from "lucide-react";
 import { NavLink } from "react-router";
+import {useSelector} from "react-redux"
+import { selectAuthUser } from "../fetures/authentication/authSelector";
+
 
 const navItems = [
-  { to: "", label: "Dashboard", Icon: House },
-  { to: "/vid/write-article", label: "Write Article", Icon: SquarePen },
-  { to: "/vid/blog-titles", label: "Blog Titles", Icon: Hash },
-  { to: "/vid/generate-images", label: "Generate Images", Icon: Image },
-  { to: "/vid/remove-background", label: "Remove Background", Icon: Eraser },
-  { to: "/vid/remove-object", label: "Remove Object", Icon: Scissors },
-  { to: "/vid/review-resume", label: "Review Resume", Icon: FileText },
-  { to: "/vid/community", label: "Community", Icon: Users },
+  { to: "", label: "Dashboard", Icon: LayoutDashboard },
+  { to: "/vid/downloader/youtube", label: "YouTube Downloader", Icon: Youtube },
+  { to: "/vid/downloader/instagram", label: "Instagram Downloader", Icon: Instagram },
+  { to: "/vid/downloader/facebook", label: "Facebook Downloader", Icon: Facebook },
+  { to: "/vid/downloader/twitter", label: "Twitter / X Downloader", Icon: Twitter },
+  { to: "/vid/downloader/tiktok", label: "TikTok Downloader", Icon: Music },
+  { to: "/vid/downloader/pinterest", label: "Pinterest Downloader", Icon: Image },
 ];
 
+
 function Sidebar({ sidebar, setSidebar }) {
+
+  const user = useSelector(selectAuthUser);
   return (
     <aside
       className={`w-60 bg-bgPrimary border-r border-border flex flex-col justify-between
@@ -59,7 +63,7 @@ function Sidebar({ sidebar, setSidebar }) {
       <div className="border-t border-border p-4 flex items-center justify-between">
         <div className="flex items-start gap-3">
           <img
-            src="https://i.pinimg.com/736x/3a/70/1a/3a701a406737e17d3dcaac322205e850.jpg"
+            src={user?.user.profileImage}
             alt=""
             className="w-8 h-8 rounded-full object-cover"
           />

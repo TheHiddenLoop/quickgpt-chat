@@ -15,8 +15,6 @@ export const protectRoute = async (req, res, next) => {
     const cachedUser = await client.get(userId);
     if (cachedUser) {
       req.user = JSON.parse(cachedUser);
-      console.log("Here");
-      
       return next();
     }
 

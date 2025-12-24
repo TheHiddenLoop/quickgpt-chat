@@ -5,6 +5,7 @@ import { connectDB } from "./config/connectDb.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 import {createClient} from "redis";
+import { postRoutes } from "./routes/postRoutes.js";
 
 
 dotenv.config();
@@ -14,7 +15,6 @@ const PORT = process.env.PORT || 3000;
 
 export const client = createClient({url: process.env.REDIS_URL});
 
-await client.connect();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,13 +25,15 @@ app.use(cors({
 }));
 
 app.use("/api/auth", authRouter);
+app.use("/api/post", postRoutes);
+
 
 app.get("/", (req, res) => {
     return res.status(200).json({ success: true, message: "Server is running..." });
 });
 
 async function main() {
-    await connectDB();
+    await Promise.all([client.connect(), connectDB()])
     app.listen(PORT, () => {
         console.log(`Server is ruung at: http://localhost:${PORT}`);
     })
