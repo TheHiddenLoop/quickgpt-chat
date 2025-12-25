@@ -1,8 +1,9 @@
-import logo from "../assets/LOGO.svg";
+import logo from "../assets/logo_full.svg";
 import {useSelector} from "react-redux"
 import { selectAuthUser } from "../fetures/authentication/authSelector";
+import { Menu, X } from "lucide-react";
 
-function Navbar() {
+function Navbar({ sidebar, setSidebar }) {
 
   const {user} = useSelector(selectAuthUser);
 
@@ -10,23 +11,16 @@ function Navbar() {
   
 
   return (
-    <header className="bg-bgPrimary px-6 md:px-[15%] h-16 flex items-center justify-between shadow-sm">
+    <header className="bg-bgPrimary px-3 md:px-10 border-b border-border h-16 flex items-center justify-between shadow-sm z-100">
       
-      <div className="flex items-center h-8">
+      <div className="flex items-center h-10">
         <img
           src={logo}
           alt="Logo"
           className="h-full w-auto object-contain"
         />
       </div>
-
-      <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-primary cursor-pointer hover:ring-2 hover:ring-primary transition">
-        <img
-          src={user.profileImage}
-          alt="User avatar"
-          className="h-full w-full object-cover"
-        />
-      </div>
+        {sidebar? <X onClick={()=>setSidebar(false)} className='w-6 h-6 text-gray-600 sm:hidden'/> : <Menu onClick={()=>setSidebar(true)} className='w-6 h-6 text-gray-600 sm:hidden'/>}
 
     </header>
   );
