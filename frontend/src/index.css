@@ -42,8 +42,8 @@ html {
 
 @layer utilities {
   html::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
   }
 
   html::-webkit-scrollbar-track {
@@ -61,7 +61,7 @@ html {
   }
 }
 
-html {
+* {
   scrollbar-color: var(--primary-color) var(--bg-primary);
-  scrollbar-width: thin;
+  scrollbar-width: thin ;
 }

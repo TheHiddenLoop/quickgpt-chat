@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router";
-import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { Toaster } from "react-hot-toast";
@@ -9,10 +8,10 @@ import {
   selectAuthUser,
   selectAuthStatusCheck,
 } from "./fetures/authentication/authSelector";
+import Home from "./pages/Home.jsx"
 import { checkAuth } from "./fetures/authentication/authSlice";
 import { Loader } from "lucide-react";
 import Layout from "./pages/Layout";
-import Dashboard from "./pages/Dashboard";
 
 function App() {
   const user = useSelector(selectAuthUser);
@@ -41,13 +40,8 @@ function App() {
       <Toaster />
 
       <Routes>
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" replace />}
-        />
-
-        <Route path="/vid" element={<Layout />}>
-          <Route index element={<Dashboard />}/>
+        <Route path="/" element={user ? <Layout /> : <Navigate to="/login" replace />}>
+          <Route index element={<Home />} />
         </Route>
 
         <Route

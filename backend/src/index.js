@@ -5,7 +5,8 @@ import { connectDB } from "./config/connectDb.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 import {createClient} from "redis";
-import { postRoutes } from "./routes/postRoutes.js";
+import { chatRouter } from "./routes/chat.js";
+
 
 
 dotenv.config();
@@ -25,7 +26,8 @@ app.use(cors({
 }));
 
 app.use("/api/auth", authRouter);
-app.use("/api/post", postRoutes);
+app.use("/api/ai", chatRouter);
+
 
 
 app.get("/", (req, res) => {
