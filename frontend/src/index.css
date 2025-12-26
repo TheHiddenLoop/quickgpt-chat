@@ -65,3 +65,8 @@ html {
   scrollbar-color: var(--primary-color) var(--bg-primary);
   scrollbar-width: thin ;
 }
+
+.reset-tw, .reset-tw *{
+  all: revert !important;
+
+}

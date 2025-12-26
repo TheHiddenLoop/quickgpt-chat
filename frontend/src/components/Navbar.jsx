@@ -20,7 +20,7 @@ function Navbar({ sidebar, setSidebar }) {
           className="h-full w-auto object-contain"
         />
       </div>
-        {sidebar? <X onClick={()=>setSidebar(false)} className='w-6 h-6 text-gray-600 sm:hidden'/> : <Menu onClick={()=>setSidebar(true)} className='w-6 h-6 text-gray-600 sm:hidden'/>}
+        {sidebar? <X onClick={()=>setSidebar(false)} className='w-6 h-6 text-primary sm:hidden'/> : <Menu onClick={()=>setSidebar(true)} className='w-6 h-6 text-primary sm:hidden'/>}
 
     </header>
   );

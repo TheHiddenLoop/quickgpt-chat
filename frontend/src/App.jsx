@@ -12,6 +12,8 @@ import Home from "./pages/Home.jsx"
 import { checkAuth } from "./fetures/authentication/authSlice";
 import { Loader } from "lucide-react";
 import Layout from "./pages/Layout";
+import Chat from "./pages/Chat.jsx";
+
 
 function App() {
   const user = useSelector(selectAuthUser);
@@ -40,8 +42,9 @@ function App() {
       <Toaster />
 
       <Routes>
-        <Route path="/" element={user ? <Layout /> : <Navigate to="/login" replace />}>
+        <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="c/:conversationId" element={<Chat />} />
         </Route>
 
         <Route
@@ -54,6 +57,7 @@ function App() {
           element={!user ? <Signup /> : <Navigate to="/" replace />}
         />
       </Routes>
+
     </div>
   );
 }

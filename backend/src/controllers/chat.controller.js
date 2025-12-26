@@ -12,7 +12,10 @@ const openai = new OpenAI({
 export const messageSend = async (req, res) => {
   try {
     const { question, conversationId } = req.body;
-    const userId = req.user._id; 
+    const userId = req.user._id;
+
+    console.log(conversationId);
+    
 
     if (!question) {
       return res.status(400).json({
@@ -21,29 +24,22 @@ export const messageSend = async (req, res) => {
       });
     }
 
-    let conversation;
+    // 🔹 conversationId MUST be present (as you said)
+    let conversation = await CreateChat.findOne({
+      conversationId,
+      userId,
+    });
 
-    if (!conversationId) {
+    if (!conversation) {
       conversation = await CreateChat.create({
+        conversationId,
         userId,
         title: question.slice(0, 30),
       });
-    } else {
-      conversation = await CreateChat.findOne({
-        _id: conversationId,
-        userId, 
-      });
-
-      if (!conversation) {
-        return res.status(404).json({
-          success: false,
-          message: "Conversation not found",
-        });
-      }
     }
 
     await Message.create({
-      conversationId: conversation._id,
+      conversationId,
       sender: "user",
       content: question,
     });
@@ -60,15 +56,15 @@ export const messageSend = async (req, res) => {
       response.choices[0].message?.content || "No response";
 
     await Message.create({
-      conversationId: conversation._id,
+      conversationId,
       sender: "bot",
       content: aiMessage,
     });
 
     return res.status(200).json({
       success: true,
-      conversationId: conversation._id,
-      response: aiMessage,
+      conversationId,
+      response: {sender:"bot", content: aiMessage},
     });
   } catch (error) {
     console.error("Error in messageSend:", error);
@@ -78,3 +74,54 @@ export const messageSend = async (req, res) => {
     });
   }
 };
+
+
+export const getConversations = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const conversations = await CreateChat.find({ userId }).sort({ updatedAt: -1 });
+
+    if (conversations.length === 0) {
+      return res.status(404).json({ success: false, message: "No conversations found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "All conversations",
+      conversations,
+    });
+
+  } catch (error) {
+    console.error("Error in fetching conversations:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Internal server error",
+    });
+  }
+};
+
+export const getAllMessages = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const messages = await Message.find({ conversationId }).sort({ createdAt: 1 });
+    
+    const filteredMessages = messages.map(e => ({
+      content: e.content,
+      sender: e.sender
+    }));
+
+    return res.status(200).json({
+      success: true,
+      messages: filteredMessages,
+    });
+
+  } catch (error) {
+    console.error("Error in fetching all messages in conversation:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Internal server error",
+    });
+  }
+};
+
+

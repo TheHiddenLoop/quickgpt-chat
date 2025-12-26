@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
   {
+    conversationId :{
+      type:String,
+      required:true
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -25,8 +29,7 @@ const conversationSchema = new mongoose.Schema(
 const messageSchema = new mongoose.Schema(
   {
     conversationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Conversation",
+      type: String,
       required: true,
       index: true,
     },
