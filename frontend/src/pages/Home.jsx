@@ -8,6 +8,7 @@ import generateConversationId from "../libs/generateId";
 
 function Home() {
   const [message, setMessage] = useState("");
+  const [mode, setMode] = useState("text");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function Home() {
     if (!message.trim()) return;
 
     const conversationId = generateConversationId();
-    dispatch(addMessage({ sender: "user", content: message }));
+    dispatch(addMessage({ sender: "user", content: message, type:mode }));
     navigate(`/c/${conversationId}`);
     dispatch(
       sendMessage({
@@ -25,7 +26,7 @@ function Home() {
       })
     );
 
-    
+
     setMessage("");
   };
 
@@ -53,7 +54,7 @@ function Home() {
               />
             </div>
 
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl text-primary font-bold">
               Welcome to AI Chat
             </h1>
 
@@ -81,26 +82,46 @@ function Home() {
       </div>
 
       <div className="border-t border-border p-2 bg-bgSecondary">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+            className="px-2 py-3 rounded-lg bg-bgPrimary border border-border
+          text-sm cursor-pointer appearance-none
+          focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+          </select>
+
           <input
             type="text"
-            placeholder="Type your message..."
+            placeholder={
+              mode === "image"
+                ? "Describe the image you want..."
+                : "Type your message..."
+            }
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             className="flex-1 px-4 py-3 rounded-lg bg-bgPrimary border border-border
-              focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+        focus:outline-none focus:ring-2 focus:ring-primary text-sm"
           />
 
+          {/* Send */}
           <button
             onClick={handleSend}
             aria-label="Send message"
-            className="p-3 rounded-lg bg-primary text-white hover:opacity-90 transition"
+            className="p-3 rounded-lg bg-gradient-to-tr from-sky-500 via-cyan-500 to-blue-600
+        text-white hover:opacity-90 transition"
           >
             <Send size={18} />
           </button>
+
         </div>
       </div>
+
     </div>
   );
 }

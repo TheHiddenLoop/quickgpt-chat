@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { CreateChat, Message } from "../model/Chat.js";
+import { cloudinary } from "../libs/cloudnary.js";
 
 dotenv.config();
 
@@ -11,11 +12,8 @@ const openai = new OpenAI({
 
 export const messageSend = async (req, res) => {
   try {
-    const { question, conversationId } = req.body;
+    const { question, conversationId, type } = req.body;
     const userId = req.user._id;
-
-    console.log(conversationId);
-    
 
     if (!question) {
       return res.status(400).json({
@@ -24,17 +22,13 @@ export const messageSend = async (req, res) => {
       });
     }
 
-    // 🔹 conversationId MUST be present (as you said)
-    let conversation = await CreateChat.findOne({
-      conversationId,
-      userId,
-    });
+    let conversation = await CreateChat.findOne({ conversationId, userId });
 
     if (!conversation) {
       conversation = await CreateChat.create({
         conversationId,
         userId,
-        title: question.slice(0, 30),
+        title: question,
       });
     }
 
@@ -42,7 +36,54 @@ export const messageSend = async (req, res) => {
       conversationId,
       sender: "user",
       content: question,
+      messageType: type || "text",
     });
+
+    if (type === "image") {
+      const workerResponse = await fetch(
+        "https://image-ai-worker.unseenx.workers.dev",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: question }),
+        }
+      );
+
+      if (!workerResponse.ok) {
+        const text = await workerResponse.text();
+        throw new Error(text);
+      }
+
+      const arrayBuffer = await workerResponse.arrayBuffer();
+      const imageBuffer = Buffer.from(arrayBuffer);
+
+      const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          { folder: "ai-images" },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        ).end(imageBuffer);
+      });
+
+      const botMsg = await Message.create({
+        conversationId,
+        sender: "bot",
+        content: uploadResult.secure_url,
+        messageType: "image",
+      });
+
+      return res.status(200).json({
+        success: true,
+        conversationId,
+        response: {
+          sender: "bot",
+          content: uploadResult.secure_url,
+          type: "image",
+        },
+      });
+    }
 
     const response = await openai.chat.completions.create({
       model: "gemini-2.5-flash",
@@ -55,25 +96,32 @@ export const messageSend = async (req, res) => {
     const aiMessage =
       response.choices[0].message?.content || "No response";
 
-    await Message.create({
+    const botMsg = await Message.create({
       conversationId,
       sender: "bot",
       content: aiMessage,
+      messageType: "text",
     });
 
     return res.status(200).json({
       success: true,
       conversationId,
-      response: {sender:"bot", content: aiMessage},
+      response: {
+        sender: "bot",
+        content: aiMessage,
+        type: "text",
+      },
     });
+
   } catch (error) {
     console.error("Error in messageSend:", error);
     return res.status(500).json({
       success: false,
-      message: error?.message || "Internal server error",
+      message: error.message || "Internal server error",
     });
   }
 };
+
 
 
 export const getConversations = async (req, res) => {
@@ -107,7 +155,8 @@ export const getAllMessages = async (req, res) => {
     
     const filteredMessages = messages.map(e => ({
       content: e.content,
-      sender: e.sender
+      sender: e.sender,
+      type: e.messageType
     }));
 
     return res.status(200).json({

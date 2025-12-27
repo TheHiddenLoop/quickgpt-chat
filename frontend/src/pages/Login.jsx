@@ -7,6 +7,7 @@ import Button from "../components/Ui/Button"
 import { login } from "../fetures/authentication/authSlice"
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthStatus } from "../fetures/authentication/authSelector"
+import { Link } from "react-router"
 
 
 function Login() {
@@ -91,6 +92,13 @@ const loading = useSelector(selectAuthStatus);
               </div>
 
             </div>
+
+            <p className="text-sm text-textSecondary flex justify-end gap-1">
+              Don’t have an account?
+              <Link to={"/signup"} className="text-primary hover:underline cursor-pointer">
+                Sign up
+              </Link>
+            </p>
 
             <Button text="Login" className="w-full bg-primary text-textPrimary hover:bg-secondary" />
           </form>

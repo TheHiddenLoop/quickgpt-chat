@@ -7,6 +7,7 @@ import Button from "../components/Ui/Button"
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../fetures/authentication/authSlice"
 import { selectAuthStatus } from "../fetures/authentication/authSelector"
+import { Link } from "react-router"
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ function Signup() {
     if (!formData.email || !formData.password || !formData.name) return;
 
     try {
-      await dispatch(signup(formData)).unwrap(); 
+      await dispatch(signup(formData)).unwrap();
       setFormData({ name: "", email: "", password: "" });
     } catch (err) {
       console.error("Signup failed:", err);
@@ -104,9 +105,17 @@ function Signup() {
               </div>
             </div>
 
+            <p className="text-sm text-textSecondary flex justify-end gap-1">
+              Already have an account?
+              <Link to={"/login"} className="text-primary hover:underline cursor-pointer">
+                Sign in
+              </Link>
+            </p>
+
             <Button disabled={loading === "loading"} text="Sign up" className="w-full bg-primary text-textPrimary hover:bg-secondary" />
           </form>
         </div>
+
 
 
         <div className="bg-bgSecondary hidden lg:flex items-center justify-center">

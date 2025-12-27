@@ -9,6 +9,7 @@ import Markdown from "react-markdown"
 function Chat() {
   const [message, setMessage] = useState("");
   const { conversationId } = useParams();
+  const [mode, setMode] = useState("text");
 
   const messages = useSelector(selectAiBotMessage);
   const loading = useSelector(selectAiBotStatus);
@@ -27,17 +28,13 @@ function Chat() {
 
   const handleSend = () => {
     if (!message.trim()) return;
-    dispatch(addMessage({ sender: "user", content: message }));
-    dispatch(sendMessage({ question: message, conversationId }));
+    dispatch(addMessage({ sender: "user", content: message, type: mode }));
+    dispatch(sendMessage({ question: message, conversationId, type: mode }));
     setMessage("");
   };
 
-  const suggestedPrompts = [
-    "Tell me a joke",
-    "How can you help me?",
-    "What's the weather like?",
-    "Explain quantum computing"
-  ];
+  console.log(messages);
+
 
   return (
     <div className="h-full flex flex-col bg-bgPrimary text-textPrimary font-robot">
@@ -49,25 +46,37 @@ function Chat() {
             className={`flex items-start gap-3 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
           >
             {msg.sender === "bot" && (
-              <div className="p-2 rounded-full bg-accentBg text-accent">
+              <div className="p-2 rounded-full bg-accentBg text-accent flex-shrink-0">
                 <Bot size={18} />
               </div>
             )}
 
             <div
-              className={` max-w-full md:max-w-[70%] px-4 py-2 rounded-xl  text-sm leading-relaxed
+              className={`rounded-xl text-sm leading-relaxed mb-3
                 ${msg.sender === "user"
-                  ? "bg-primary text-white rounded-br-none mb-3"
-                  : "bg-secondaryBg text-textPrimary rounded-tl-none mb-3"
+                  ? "bg-primary text-white rounded-tr-none px-4 py-2 max-w-full md:max-w-[70%]"
+                  : msg.type === "image"
+                    ? "bg-secondaryBg rounded-tl-none p-2 max-w-[250px] sm:max-w-[300px] md:max-w-[350px]"
+                    : "bg-secondaryBg text-textPrimary rounded-tl-none px-4 py-2 max-w-full md:max-w-[70%]"
                 }`}
             >
-              {msg.sender === "user" ? msg.content : (
-                <div className="reset-tw"><Markdown>{msg.content}</Markdown></div>
+              {msg.sender === "user" ? (
+                msg.content
+              ) : msg.type === "image" ? (
+                <img
+                  src={msg.content}
+                  alt="AI generated"
+                  className="rounded-lg w-full h-auto object-contain"
+                />
+              ) : (
+                <div className="reset-tw">
+                  <Markdown>{msg.content}</Markdown>
+                </div>
               )}
             </div>
 
             {msg.sender === "user" && (
-              <div className="p-2 rounded-full bg-primaryBg text-primary">
+              <div className="p-2 rounded-full bg-primaryBg text-primary flex-shrink-0">
                 <User size={18} />
               </div>
             )}
@@ -77,13 +86,31 @@ function Chat() {
       </div>
 
       <div className="border-t border-border p-2 bg-bgSecondary">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+            className="px-2 py-3 rounded-lg bg-bgPrimary border border-border
+            text-sm font-medium cursor-pointer
+            appearance-none focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+          </select>
+
           <input
             type="text"
-            placeholder="Type your message..."
+            placeholder={
+              mode === "image"
+                ? "Describe the image you want..."
+                : "Type your message..."
+            }
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            disabled={mode === "image" && loading === "loading"}
             className="flex-1 px-4 py-3 rounded-lg bg-bgPrimary border border-border
               focus:outline-none focus:ring-2 focus:ring-primary text-sm"
           />
@@ -92,12 +119,15 @@ function Chat() {
             onClick={handleSend}
             disabled={loading === "loading"}
             aria-label="Send message"
-            className={`p-3 rounded-lg bg-primary text-white hover:opacity-90 transition disabled:animate-pulse disabled:cursor-not-allowed`}
+            className="p-3 rounded-lg bg-gradient-to-tr from-sky-500 via-cyan-500 to-blue-600
+        text-white hover:opacity-90 transition
+        disabled:animate-pulse disabled:cursor-not-allowed"
           >
             <Send size={18} />
           </button>
         </div>
       </div>
+
     </div>
   );
 }

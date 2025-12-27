@@ -21,6 +21,18 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    credits: {
+      type: Number,
+      default: 50,
+      min: 0,
+    },
+
+    userType: {
+      type: String,
+      enum: ["free", "premium"],
+      default: "free",
+    },
+
     profileImage: {
       type: String,
       default:

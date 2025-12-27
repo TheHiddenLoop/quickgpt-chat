@@ -6,7 +6,6 @@ export const sendMessage = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       const data = await sendMessageApi(formData);
-      console.log(data);
       return data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -55,8 +54,8 @@ const aiBotSlice = createSlice({
   },
   reducers :{
     addMessage: (state, action) => {
-    const { sender, content } = action.payload;    
-    state.message = [...state.message, { sender, content }];
+    const { sender, content, type } = action.payload;    
+    state.message = [...state.message, { sender, content, type }];
   },
   },
   extraReducers: (builder) => {
