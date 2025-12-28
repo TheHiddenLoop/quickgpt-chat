@@ -13,6 +13,7 @@ import { checkAuth } from "./fetures/authentication/authSlice";
 import { Loader } from "lucide-react";
 import Layout from "./pages/Layout";
 import Chat from "./pages/Chat.jsx";
+import Pricing from "./pages/Pricing.jsx";
 
 
 function App() {
@@ -46,7 +47,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="c/:conversationId" element={<Chat />} />
         </Route>
-
+          <Route path="/pricing" element={<Pricing />}/>
         <Route
           path="/login"
           element={!user ? <Login /> : <Navigate to="/" replace />}
