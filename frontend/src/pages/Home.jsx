@@ -1,6 +1,6 @@
 import { Send, Sparkles } from "lucide-react";
 import { useState } from "react";
-import logo from "../assets/logo.svg";
+import logo from "../assets/LOGO.svg";
 import { useDispatch } from "react-redux";
 import { addMessage, sendMessage } from "../fetures/chat/chatSlice";
 import { useNavigate } from "react-router";
