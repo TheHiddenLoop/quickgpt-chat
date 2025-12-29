@@ -20,7 +20,7 @@ function Navbar({ sidebar, setSidebar }) {
       <div className="hidden sm:flex items-center gap-2 bg-gradient-to-tr from-sky-500 via-cyan-500 to-blue-600 px-4 py-2 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all">
         <Coins size={16} className="text-white" />
         <span className="text-white font-semibold text-sm">
-          {user.credits || 0}
+          {user.credits? user.credits: 0}
         </span>
         <span className="text-white/80 text-xs font-medium">Credits</span>
       </div>
