@@ -29,7 +29,7 @@ function Navbar({ sidebar, setSidebar }) {
         <div className="flex items-center gap-1.5 bg-gradient-to-tr from-sky-500 via-cyan-500 to-blue-600 px-3 py-1.5 rounded-full shadow-md shadow-blue-500/20">
           <Coins size={14} className="text-white" />
           <span className="text-white font-semibold text-xs">
-            {user.credits || 0}
+            {user.credits? user.credits: 0}
           </span>
         </div>
 
