@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getConversationsApi, getMessagesApi, sendMessageApi } from "./chatApi";
+import toast from "react-hot-toast"
 
 export const sendMessage = createAsyncThunk(
   "ai/chat",
@@ -8,6 +9,11 @@ export const sendMessage = createAsyncThunk(
       const data = await sendMessageApi(formData);
       return data;
     } catch (err) {
+      toast.error(
+        err?.response?.data?.message ||
+        err?.message ||
+        "Something went wrong. Please try again."
+      );
       return thunkAPI.rejectWithValue(
         err.response?.data?.message || err.message
       );
@@ -18,7 +24,7 @@ export const sendMessage = createAsyncThunk(
 export const getConversations = createAsyncThunk(
   "ai/conversations",
   async (_, thunkAPI) => {
-     try {
+    try {
       const data = await getConversationsApi();
       return data.conversations;
     } catch (err) {
@@ -32,7 +38,7 @@ export const getConversations = createAsyncThunk(
 export const getMessage = createAsyncThunk(
   "ai/message",
   async (conversationId, thunkAPI) => {
-     try {
+    try {
       const data = await getMessagesApi(conversationId);
       return data.messages;
     } catch (err) {
@@ -48,15 +54,15 @@ const aiBotSlice = createSlice({
   initialState: {
     message: [],
     conversations: null,
-    status: "idle",       
-    statusCheck: "idle", 
+    status: "idle",
+    statusCheck: "idle",
     error: null,
   },
-  reducers :{
+  reducers: {
     addMessage: (state, action) => {
-    const { sender, content, type } = action.payload;    
-    state.message = [...state.message, { sender, content, type }];
-  },
+      const { sender, content, type } = action.payload;
+      state.message = [...state.message, { sender, content, type }];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -67,7 +73,7 @@ const aiBotSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.status = "succeeded";
-        if(action.payload.response){
+        if (action.payload.response) {
           state.message = [...state.message, action.payload.response];
         }
         if (action.payload.conversation) {
@@ -109,6 +115,6 @@ const aiBotSlice = createSlice({
   },
 });
 
-export const {addMessage} = aiBotSlice.actions;
+export const { addMessage } = aiBotSlice.actions;
 
 export default aiBotSlice.reducer;

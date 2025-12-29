@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import { CreateChat, Message } from "../model/Chat.js";
 import { cloudinary } from "../libs/cloudnary.js";
+import { User } from "../model/User.js";
 
 dotenv.config();
 
@@ -39,13 +40,25 @@ export const messageSend = async (req, res) => {
       messageType: type || "text",
     });
 
+    const abortController = new AbortController();
+
     if (type === "image") {
+
+      if (req.user.credits < 5) {
+      return res.status(403).json({
+        success: false,
+        message: "You don't have enough credits to generate image.",
+      });
+    }
+
+
       const workerResponse = await fetch(
         "https://image-ai-worker.unseenx.workers.dev",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: question }),
+          //signal : abortController.signal
         }
       );
 
@@ -73,6 +86,8 @@ export const messageSend = async (req, res) => {
         content: uploadResult.secure_url,
         messageType: "image",
       });
+
+      await User.findByIdAndUpdate(userId, { $inc: { credits: -5 } });
 
       return res.status(200).json({
         success: true,

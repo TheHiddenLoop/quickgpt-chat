@@ -1,6 +1,6 @@
-import { Check, Sparkles,  } from "lucide-react";
+import { Check, CheckCircle2, Sparkles,  } from "lucide-react";
 
-function PricingCard({ name, description, price, features, isPremium, billingCycle }) {
+function PricingCard({ name, description, price, features, isPremium, billingCycle, isActive, onClick }) {
   return (
     <div
       className="relative p-10 rounded-xl transition-all duration-300 flex flex-col h-full bg-bgPrimary text-textPrimary shadow-lg hover:shadow-xl border border-border"
@@ -9,6 +9,13 @@ function PricingCard({ name, description, price, features, isPremium, billingCyc
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-warning text-textPrimary px-3 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
           <Sparkles size={12} />
           Best Value
+        </div>
+      )}
+      
+      {isActive && (
+        <div className="absolute -top-3 right-6 bg-green-500 text-white px-3 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+          <CheckCircle2 size={12} />
+          Current Plan
         </div>
       )}
       
@@ -24,7 +31,7 @@ function PricingCard({ name, description, price, features, isPremium, billingCyc
       <div className="mb-8">
         <div className="flex items-baseline gap-1">
           <span className="text-4xl font-extrabold text-textPrimary">
-            ${price}
+            ₹{price}
           </span>
           <span className="text-base text-textSecondary">
             /{billingCycle}
@@ -32,7 +39,7 @@ function PricingCard({ name, description, price, features, isPremium, billingCyc
         </div>
         {billingCycle === "year" && (
           <p className="mt-1 text-sm text-textSecondary">
-            That's just $24.17/month
+            That's just ₹{price/12}/month
           </p>
         )}
       </div>
@@ -51,12 +58,20 @@ function PricingCard({ name, description, price, features, isPremium, billingCyc
       </ul>
 
       <button
-        className="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 bg-accent text-white hover:bg-primary shadow-md text-sm"
+        onClick={onClick}
+        className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 shadow-md text-sm ${
+          isActive 
+            ? 'bg-gray-400 text-gray-700 cursor-not-allowed' 
+            : 'bg-accent text-white hover:bg-primary'
+        }`}
+        disabled={isActive}
       >
-        Get Started
+        {isActive ? 'Current Plan' : 'Get Started'}
       </button>
     </div>
   );
 }
+
+
 
 export default PricingCard;

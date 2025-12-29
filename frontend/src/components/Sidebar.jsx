@@ -1,17 +1,18 @@
-import { ChevronDown, ChevronRight, LogOut, Plus, Search } from "lucide-react";
+import { ChevronDown, ChevronRight, LogOut, Plus, Search, User, CreditCard, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthUser } from "../fetures/authentication/authSelector";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { selectAiBotConversations } from "../fetures/chat/chatSelector";
 import { getConversations } from "../fetures/chat/chatSlice";
 import { Link } from "react-router";
-import { } from "../fetures/authentication/authSlice.js"
 
 function Sidebar({ sidebar, setShowModal, setSidebar }) {
   const dispatch = useDispatch();
 
   const conversations = useSelector(selectAiBotConversations) || [];
   const [chatShow, setChatShow] = useState(true);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuRef = useRef(null);
 
   const user = useSelector(selectAuthUser);
 
@@ -19,10 +20,26 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
     dispatch(getConversations());
   }, [dispatch]);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const userType =
     user?.user?.userType?.charAt(0).toUpperCase() +
     user?.user?.userType?.slice(1);
 
+  const handleLogout = () => {
+    console.log("Logging out...");
+  };
 
   return (
     <aside
@@ -65,29 +82,75 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
                 {chat.title.length <= 30
                   ? chat.title
                   : chat.title.slice(0, 30) + "..."}
-
               </Link>
             ))}
           </div>
         )}
       </div>
 
-      <div className="border-t border-border px-4 py-3 flex-none flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img
-            src={user?.user.profileImage || ""}
-            alt=""
-            className="w-8 h-8 rounded-full object-cover"
-          />
-          <div className="space-y-0.5">
-            <h2 className="text-sm font-medium text-textPrimary">
-              {user?.user.name}
-            </h2>
-            <p className="text-xs font-medium text-primary">{userType} user</p>
+      <div className="relative border-t border-border px-4 py-3 flex-none" ref={menuRef}>
+        {/* User Menu Modal */}
+        {showUserMenu && (
+          <div className="absolute bottom-full left-4 right-4 mb-2 bg-bgPrimary border border-border rounded-lg shadow-lg overflow-hidden">
+            <Link 
+              to="/profile" 
+              onClick={() => {
+                setShowUserMenu(false);
+                setSidebar(false);
+              }}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-textPrimary hover:bg-accentBg transition-colors duration-200 cursor-pointer"
+            >
+              <User size={16} />
+              <span>Edit Profile</span>
+            </Link>
+            
+            <Link 
+              to="/pricing" 
+              onClick={() => {
+                setShowUserMenu(false);
+                setSidebar(false);
+              }}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-textPrimary hover:bg-accentBg transition-colors duration-200 cursor-pointer"
+            >
+              <CreditCard size={16} />
+              <span>Purchase Plan</span>
+            </Link>
+            
+            <div 
+              onClick={() => {
+                handleLogout();
+                setShowUserMenu(false);
+              }}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-error hover:bg-accentBg transition-colors duration-200 cursor-pointer border-t border-border"
+            >
+              <LogOut size={16} />
+              <span>Logout</span>
+            </div>
           </div>
-        </div>
+        )}
 
-        <LogOut className="w-4 h-4 text-textSecondary hover:text-error transition cursor-pointer" />
+        <div 
+          onClick={() => setShowUserMenu(!showUserMenu)}
+          className="flex items-center justify-between cursor-pointer hover:bg-accentBg -mx-2 px-2 py-1 rounded-lg transition-colors duration-200"
+        >
+          <div className="flex items-center gap-3">
+            <img
+              src={user?.user.profileImage || ""}
+              alt=""
+              className="w-8 h-8 rounded-full object-cover"
+            />
+            <div className="space-y-0.5">
+              <h2 className="text-sm font-medium text-textPrimary">
+                {user?.user.name}
+              </h2>
+              <p className="text-xs font-medium text-primary">{userType} user</p>
+            </div>
+          </div>
+
+          <ChevronUp 
+            className={`w-4 h-4 text-textSecondary transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`}
+          />
+        </div>
       </div>
     </aside>
   );

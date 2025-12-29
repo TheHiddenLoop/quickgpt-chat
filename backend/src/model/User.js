@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema(
       default: "free",
     },
 
+    subscriptionType: {
+      type: String,
+      enum: ["free", "monthly", "yearly"],
+      default: "free",
+    },
+
+
     profileImage: {
       type: String,
       default:

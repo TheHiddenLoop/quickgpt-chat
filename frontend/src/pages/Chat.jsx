@@ -82,6 +82,22 @@ function Chat() {
             )}
           </div>
         ))}
+
+        {loading === "loading" && (
+          <div className="flex items-start gap-3 justify-start">
+            <div className="p-2 rounded-full bg-accentBg text-accent flex-shrink-0">
+              <Bot size={18} />
+            </div>
+            <div className="bg-secondaryBg text-textPrimary rounded-xl rounded-tl-none px-4 py-3">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-textPrimary rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                <div className="w-2 h-2 bg-textPrimary rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+                <div className="w-2 h-2 bg-textPrimary rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={bottomRef} />
       </div>
 
@@ -110,7 +126,7 @@ function Chat() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            disabled={mode === "image" && loading === "loading"}
+            readOnly={mode === "image" && loading === "loading"}
             className="flex-1 px-4 py-3 rounded-lg bg-bgPrimary border border-border
               focus:outline-none focus:ring-2 focus:ring-primary text-sm"
           />

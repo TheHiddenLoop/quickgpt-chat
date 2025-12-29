@@ -26,7 +26,9 @@ export const signup = async (req, res) => {
             password: hashedPass
         });
 
-        res.status(200).json({success:true, message:"User registered", newUser});
+        generateToken(newUser._id, res);
+
+        res.status(200).json({success:true, message:"User registered", user: newUser});
     } catch (error) {
         console.log("Error in signup:", error);
         res.status(500).json({success:false, message: "Internal server error."});
