@@ -135,13 +135,13 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
         >
           <div className="flex items-center gap-3">
             <img
-              src={user?.user.profileImage || ""}
+              src={user?.user?.profileImage || ""}
               alt=""
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="space-y-0.5">
               <h2 className="text-sm font-medium text-textPrimary">
-                {user?.user.name}
+                {user?.user?.name}
               </h2>
               <p className="text-xs font-medium text-primary">{userType} user</p>
             </div>
