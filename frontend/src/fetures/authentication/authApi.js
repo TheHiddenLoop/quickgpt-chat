@@ -3,7 +3,7 @@ import { axiosInstance } from "../../libs/axios";
 
 export const check= async () => {
   try {
-    const res = await axiosInstance.get("auth/me");
+    const res = await axiosInstance.get("/auth/me");
     return res.data; 
   } catch (err) {
     console.log(err);
