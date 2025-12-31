@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema(
       default: "free",
     },
 
+    endDate: {
+      type: Date,
+    },
 
     profileImage: {
       type: String,

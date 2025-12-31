@@ -12,7 +12,7 @@ const InputField = ({ name, value, onChange, icon: Icon, placeholder, type = "te
       onChange={onChange}
       readOnly={active}
       placeholder={placeholder}
-      className="w-full pl-12 pr-4 py-2.5 bg-bgSecondary border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-skin duration-300 text-textPrimary placeholder-textSecondary shadow-skin backdrop-blur-sm"
+      className="w-full pl-12 pr-4 py-4 ms:py-3 bg-bgSecondary border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-skin duration-300 text-textPrimary placeholder-textSecondary shadow-skin backdrop-blur-sm"
     />
   </div>
 );

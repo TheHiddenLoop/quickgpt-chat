@@ -31,3 +31,28 @@ export const loginApi = async (formData) => {
         throw new Error(message);
     }
 };
+
+export const logout = async () => {
+  try {
+    const res = await axiosInstance.post("/auth/logout");    
+    return res.data; 
+  } catch (err) {
+    const message =
+      err.response?.data?.message || err.message || "Logout failed";
+    throw new Error(message);
+  }
+};
+
+
+export const updateProfile = async (formData) => {
+  try {
+    const res = await axiosInstance.put("/auth/update", formData, {
+      headers: { "Content-Type": "multipart/form-data" }, 
+    });
+    return res.data;
+  } catch (err) {
+    const message =
+      err.response?.data?.message || err.message || "Profile update failed";
+    throw new Error(message);
+  }
+};

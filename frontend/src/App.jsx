@@ -14,6 +14,7 @@ import { Loader } from "lucide-react";
 import Layout from "./pages/Layout";
 import Chat from "./pages/Chat.jsx";
 import Pricing from "./pages/Pricing.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           <Route path="c/:conversationId" element={<Chat />} />
         </Route>
           <Route path="/pricing" element={<Pricing />}/>
+          <Route path="/profile" element={<ProfilePage />}/>
         <Route
           path="/login"
           element={!user ? <Login /> : <Navigate to="/" replace />}

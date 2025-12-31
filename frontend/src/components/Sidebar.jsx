@@ -89,7 +89,6 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
       </div>
 
       <div className="relative border-t border-border px-4 py-3 flex-none" ref={menuRef}>
-        {/* User Menu Modal */}
         {showUserMenu && (
           <div className="absolute bottom-full left-4 right-4 mb-2 bg-bgPrimary border border-border rounded-lg shadow-lg overflow-hidden">
             <Link 

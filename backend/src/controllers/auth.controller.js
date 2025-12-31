@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt"
 import { User } from "../model/User.js";
 import { generateToken } from "../libs/utils.js";
+import { cloudinary } from "../libs/cloudnary.js";
+import streamifier from "streamifier";
 
 const SALT_ROUNDS = 10;
 
@@ -73,3 +75,56 @@ export const me = async (req, res) => {
         res.status(500).json({success:false, message: "Internal server error."});
     }
 }
+
+function uploadToCloudinary(fileBuffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "products" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    streamifier.createReadStream(fileBuffer).pipe(stream);
+  });
+}
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name } =req.body;
+    const userId = req.user._id;
+
+    const user = await User.findById(userId).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      user.profileImage = result.secure_url;
+    }
+
+    if (name) user.name = name;
+
+    await user.save();
+    res.json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: "Server error during profile update" });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      expires: new Date(0),
+      path: "/",
+    });
+
+    res.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    res.status(500).json({ message: "Server error during logout" });
+  }
+};

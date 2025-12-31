@@ -44,6 +44,7 @@ export const stripeWebhook = async (req, res) => {
         await User.findByIdAndUpdate(userId, {
           subscriptionType: planKey,
           userType: "premium",
+          endDate,
           $inc: { credits: plan.credits },
         });
 
@@ -70,7 +71,7 @@ export const stripeWebhook = async (req, res) => {
       case "invoice.payment_succeeded":
       case "invoice.payment_failed":
       case "invoice_payment.paid":
-        console.log("ℹInvoice event received:", event.type);
+        console.log("Invoice event received:", event.type);
         break;
 
       default:
