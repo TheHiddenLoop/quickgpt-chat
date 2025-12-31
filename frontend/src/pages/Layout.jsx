@@ -3,10 +3,11 @@ import { Outlet, } from "react-router";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { selectAuthUser } from "../fetures/authentication/authSelector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Signup from "./Signup";
 import SearchModal from "../components/SearchModal";
 import { selectAiBotConversations } from "../fetures/chat/chatSelector";
+import { checkAuth } from "../fetures/authentication/authSlice";
 
 
 export default function Layout() {
@@ -14,6 +15,11 @@ export default function Layout() {
   const user = useSelector(selectAuthUser);
   const [showModal, setShowModal] = useState(false);
   const conversations = useSelector(selectAiBotConversations);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   if (!user) {
     return <Signup />;
