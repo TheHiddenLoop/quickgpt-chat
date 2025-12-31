@@ -34,6 +34,9 @@ function Signup() {
     try {
       await dispatch(signup(formData)).unwrap();
       setFormData({ name: "", email: "", password: "" });
+      setTimeout(()=>{
+          navigate("/");
+        }, 1000);
     } catch (err) {
       console.error("Signup failed:", err);
     }

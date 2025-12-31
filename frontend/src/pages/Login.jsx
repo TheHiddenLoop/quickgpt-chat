@@ -7,7 +7,7 @@ import Button from "../components/Ui/Button"
 import { login } from "../fetures/authentication/authSlice"
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthStatus } from "../fetures/authentication/authSelector"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 
 function Login() {
@@ -18,6 +18,7 @@ function Login() {
 
   const dispatch = useDispatch();
 const loading = useSelector(selectAuthStatus);
+const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +36,10 @@ const loading = useSelector(selectAuthStatus);
       try {
         await dispatch(login(formData)).unwrap(); 
         setFormData({email: "", password: "" });
+        setTimeout(()=>{
+          navigate("/");
+        }, 1000);
+
       } catch (err) {
         console.error("Signup failed:", err);
       }
