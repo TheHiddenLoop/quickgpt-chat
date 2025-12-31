@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { selectAiBotConversations } from "../fetures/chat/chatSelector";
 import { getConversations } from "../fetures/chat/chatSlice";
 import { Link } from "react-router";
+import { logoutAuth } from "../fetures/authentication/authSlice";
 
 function Sidebar({ sidebar, setShowModal, setSidebar }) {
   const dispatch = useDispatch();
@@ -38,7 +39,8 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
     user?.user?.userType?.slice(1);
 
   const handleLogout = () => {
-    console.log("Logging out...");
+    dispatch(logoutAuth());
+    navigate("/login");
   };
 
   return (
