@@ -23,9 +23,7 @@ export const login = createAsyncThunk(
   async (formData, thunkAPI) => {
     try {
       const data = await loginApi(formData);
-      toast.success(data.message);
-      console.log(data);
-      
+      toast.success(data.message);      
       return data;
     } catch (err) {
       toast.error(err.message);
