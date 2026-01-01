@@ -25,8 +25,6 @@ function Home() {
         conversationId,
       })
     );
-
-
     setMessage("");
   };
 

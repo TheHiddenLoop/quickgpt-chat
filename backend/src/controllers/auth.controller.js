@@ -45,7 +45,7 @@ export const signin = async (req, res) => {
             return res.status(400).json({success:false, message:"All fields are required"});
         }
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).select("-password");
 
         if(!user){
             return res.status(404).json({success:false, message:"User not found."});
@@ -59,7 +59,7 @@ export const signin = async (req, res) => {
 
         generateToken(user._id, res);
 
-        return res.status(200).json({ message: 'Login successful' });
+        return res.status(200).json({ message: 'Login successful', user });
     } catch (error) {
         console.log("Error in signin:", error);
         res.status(500).json({success:false, message: "Internal server error."});

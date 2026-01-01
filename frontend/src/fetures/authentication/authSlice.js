@@ -24,6 +24,8 @@ export const login = createAsyncThunk(
     try {
       const data = await loginApi(formData);
       toast.success(data.message);
+      console.log(data);
+      
       return data;
     } catch (err) {
       toast.error(err.message);
