@@ -45,7 +45,7 @@ export const signin = async (req, res) => {
             return res.status(400).json({success:false, message:"All fields are required"});
         }
 
-        const user = await User.findOne({email});
+        let user = await User.findOne({email});
 
         if(!user){
             return res.status(404).json({success:false, message:"User not found."});
