@@ -4,7 +4,7 @@ import { selectAuthUser } from "../fetures/authentication/authSelector";
 import { useEffect, useState, useRef } from "react";
 import { selectAiBotConversations } from "../fetures/chat/chatSelector";
 import { getConversations } from "../fetures/chat/chatSlice";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { logoutAuth } from "../fetures/authentication/authSlice";
 
 function Sidebar({ sidebar, setShowModal, setSidebar }) {
@@ -14,6 +14,7 @@ function Sidebar({ sidebar, setShowModal, setSidebar }) {
   const [chatShow, setChatShow] = useState(true);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   const user = useSelector(selectAuthUser);
 
