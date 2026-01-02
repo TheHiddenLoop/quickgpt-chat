@@ -33,7 +33,6 @@ function Chat() {
     setMessage("");
   };
 
-  console.log(messages);
 
 
   return (

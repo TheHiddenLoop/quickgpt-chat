@@ -51,7 +51,7 @@ function Pricing() {
           </p>
 
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="absolute top-1 sm:top-7 right-8 p-2 rounded-full text-textSecondary hover:text-textPrimary hover:bg-bgPrimary transition-transform duration-300 hover:rotate-90"
             aria-label="Close pricing"
           >

@@ -18,7 +18,7 @@ function Home() {
 
     const conversationId = generateConversationId();
     dispatch(addMessage({ sender: "user", content: message, type:mode }));
-    navigate(`/c/${conversationId}`);
+    navigate(`/c/${conversationId}`, {state: { sender: "user", content: message, type:mode }});
     dispatch(
       sendMessage({
         question: message,
